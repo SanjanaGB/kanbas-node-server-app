@@ -1,8 +1,8 @@
 const todos = [
-    { id: 1, title: "Task 1", completed: false },
-    { id: 2, title: "Task 2", completed: true },
-    { id: 3, title: "Task 3", completed: false },
-    { id: 4, title: "Task 4", completed: true },
+    { id: 1, title: "Task 1", completed: false, due: "2021-09-09", description: "Description 1" },
+    { id: 2, title: "Task 2", completed: true, due: "2021-09-09", description: "Description 2" },
+    { id: 3, title: "Task 3", completed: false, due: "2021-09-09", description: "Description 3" },
+    { id: 4, title: "Task 4", completed: true, due: "2021-09-09", description: "Description 4" },
 ];
 
 const assignment = {
@@ -15,7 +15,10 @@ const assignment = {
 };
 
 function Lab5(app) {
-    app.post("/a5/todos", (req, res) => {
+    app.get("/a5/welcome", (req, res) => {
+        res.send("Welcome to Assignment 5");
+    });
+app.post("/a5/todos", (req, res) => {
         const newTodo = {
             ...req.body,
             id: new Date().getTime(),
@@ -54,11 +57,36 @@ function Lab5(app) {
         todo.title = newTitle;
         res.json(todos);
     });
+
+    app.get("/a5/todos/:id/completed/:newStatus", (req, res) => {
+        const { id, newStatus } = req.params;
+        const todo = todos.find((todo) => todo.id === parseInt(id));
+        if (!todo) {
+            res.status(404).send("Todo not found");
+            return;
+        }
+        todo.completed = newStatus;
+        res.json(todos);
+    });
+
+    app.get("/a5/todos/:id/description/:newDescription", (req, res) => {
+        const { id, newDescription } = req.params;
+        const todo = todos.find((todo) => todo.id === parseInt(id));
+        if (!todo) {
+            res.status(404).send("Todo not found");
+            return;
+        }
+        todo.description = newDescription;
+        res.json(todos);
+    });
+
     app.delete("/a5/todos/:id", (req, res) => {
         const { id } = req.params;
         const index = todos.findIndex((todo) => todo.id === parseInt(id));
         if (index === -1) {
-            res.status(404).send("Todo not found");
+            res.status(404)
+                .json({ message:
+                        `Unable to delete Todo with ID ${id}` });
             return;
         }
         todos.splice(index, 1);
@@ -74,6 +102,25 @@ function Lab5(app) {
         todos.splice(index, 1);
         res.json(todos);
     });
+
+    app.put("/a5/todos/:id", (req, res) => {
+        const { id } = req.params;
+        const todo = todos.find((t) => t.id === parseInt(id));
+        if (!todo) {
+            res.status(404)
+                .json({ message:
+                        `Unable to update Todo with ID ${id}` });
+            return;
+        }
+        todo.title = req.body.title;
+        console.log(req.body.title);
+        todo.description = req.body.description;
+        todo.due = req.body.due;
+        todo.completed = req.body.completed;
+        res.sendStatus(200);
+    });
+
+
     app.get("/a5/todos", (req, res) => {
         const { completed } = req.query;
         // if (completed === "true") {
@@ -100,6 +147,16 @@ function Lab5(app) {
     app.get("/a5/assignment/title/:newTitle", (req, res) => {
         const { newTitle } = req.params;
         assignment.title = newTitle;
+        res.send(assignment);
+    });
+    app.get("/a5/assignment/score/:newScore", (req, res) => {
+        const { newScore } = req.params;
+        assignment.score = newScore;
+        res.send(assignment);
+    });
+    app.get("/a5/assignment/completed/:newCompleted", (req, res) => {
+        const { newCompleted } = req.params;
+        assignment.completed = newCompleted;
         res.send(assignment);
     });
 

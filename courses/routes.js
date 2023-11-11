@@ -15,21 +15,17 @@ function CourseRoutes(app) {
     });
     app.delete("/api/courses/:id", (req, res) => {
         const { id } = req.params;
-        const index = Database.courses.findIndex((course) => course._id === id);
-        if (index === -1) {
-            res.status(404).send("Course not found");
-            return;
-        }
-        Database.courses.splice(index, 1);
-        res.json(204);
+        Database.courses = Database.courses
+            .filter((c) => c._id !== id);
+        res.sendStatus(204);
     });
     app.post("/api/courses", (req, res) => {
         const newCourse = {
             ...req.body,
             _id: new Date().getTime().toString(),
         };
-        Database.courses.unshift(newCourse);
-        res.json(newCourse);
+        Database.courses.push(newCourse);
+        res.send(newCourse);
     });
     app.put("/api/courses/:id", (req, res) => {
         const { id } = req.params;
@@ -39,10 +35,9 @@ function CourseRoutes(app) {
             return;
         }
         Database.courses[index] = {
-            ...Database.courses[index],
             ...req.body,
         };
-        res.json(200);
+        res.send(Database.courses[index]);
     });
 }
 export default CourseRoutes;
