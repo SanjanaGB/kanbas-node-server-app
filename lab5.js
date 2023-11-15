@@ -31,6 +31,8 @@ app.post("/a5/todos", (req, res) => {
         const newTodo = {
             id: new Date().getTime(),
             title: "New Todo",
+            description: "New Description",
+            due: "2021=09-09",
             completed: false,
         };
         todos.push(newTodo);
