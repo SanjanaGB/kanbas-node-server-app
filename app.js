@@ -1,4 +1,4 @@
-// const express = require("express");
+import "dotenv/config";
 import express from "express";
 import HelloRoutes from "./hello.js";
 import Lab5 from "./lab5.js";
@@ -17,4 +17,4 @@ AssignmentRoutes(app);
 Lab5(app);
 HelloRoutes(app);
 
-app.listen(4000);
+app.listen(process.env.PORT || 4000);
