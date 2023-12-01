@@ -31,6 +31,13 @@ function UserRoutes(app) {
     const updateOtherUser = async (req, res) => {
         const { userId } = req.params;
         const status = await dao.updateUser(userId, req.body);
+        var user = await dao.findUserById(userId);
+        console.log(user);
+        console.log(req.session['currentUser']);
+        const currentUser = req.session['currentUser'];
+        if(currentUser.username === user.username) {
+            req.session['currentUser'] =  await dao.findUserById(userId);
+        }
         res.json(status);
     };
     const signup = async (req, res) => {
@@ -57,6 +64,7 @@ function UserRoutes(app) {
     };
 
     const account = async (req, res) => {
+
         res.json(req.session['currentUser']);
     };
 
