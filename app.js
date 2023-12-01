@@ -10,7 +10,7 @@ import cors from "cors";
 import session from "express-session";
 import mongoose from "mongoose";
 
-const CONNECTION_STRING =  'mongodb+srv://sanjana051198:sanjana123@cluster0.jlzmdi8.mongodb.net/?retryWrites=true&w=majority' || 'mongodb://127.0.0.1:27017/kanbas'
+const CONNECTION_STRING =  process.env.DATABASE || 'mongodb://127.0.0.1:27017/kanbas'
 mongoose.connect(CONNECTION_STRING);
 
 const app = express();
